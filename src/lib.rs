@@ -35,6 +35,9 @@ pub mod ops;
 mod queue;
 mod uring;
 
+#[cfg(any(feature = "async-tokio", feature = "async-async-std"))]
+pub mod async_io;
+
 pub use error::{Error, Result};
 pub use queue::{CompletionQueue, Cqe, SubmissionQueue};
 pub use uring::IoUring;
