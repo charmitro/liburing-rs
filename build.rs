@@ -1,5 +1,5 @@
 use std::env;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 fn main() {
     const MIN_VERSION: &str = "2.12";
@@ -48,7 +48,7 @@ fn try_pkg_config(min_version: &str) -> bool {
     true
 }
 
-fn generate_bindings(header_path: &PathBuf, include_dir: &PathBuf) {
+fn generate_bindings(header_path: &Path, include_dir: &Path) {
     let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
 
     let bindings = bindgen::Builder::default()
@@ -99,7 +99,7 @@ fn build_from_source(min_version: &str) {
         );
 
         let status = Command::new("git")
-            .args(&[
+            .args([
                 "clone",
                 "--depth=1",
                 "--branch",
