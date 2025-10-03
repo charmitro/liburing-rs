@@ -1,0 +1,33 @@
+[package]
+name = "liburing-rs"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.70"
+authors = ["Charalampos Mitrodimas <charmitro@posteo.net>"]
+license = "MIT"
+description = "Rust bindings and idiomatic wrapper for liburing"
+keywords = ["io_uring", "async", "io", "linux", "liburing"]
+categories = ["asynchronous", "os::unix-apis"]
+repository = "https://github.com/charmitro/liburing-rs"
+readme = "README.rst"
+links = "uring"
+
+# System dependencies (installed via package manager):
+# - liburing >= 2.12 (liburing.so)
+
+[dependencies]
+libc = "0.2"
+bitflags = "2.6"
+
+[build-dependencies]
+bindgen = "0.72"
+pkg-config = "0.3"
+
+[dev-dependencies]
+tempfile = "3.0"
+
+[features]
+default = []
+# Future: async support via tokio/async-std
+async-tokio = []
+async-std = []
