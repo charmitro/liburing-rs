@@ -58,6 +58,8 @@ The build script:
 Usage
 -----
 
+**Synchronous API:**
+
 .. code:: rust
 
    use liburing_rs::{IoUring, ops::*};
@@ -79,8 +81,35 @@ Usage
    let cqe = cq.wait_cqe()?;
    println!("Result: {}", cqe.result());
 
+**Async API (tokio):**
+
+.. code:: rust
+
+   use liburing_rs::async_io::AsyncIoUring;
+   use liburing_rs::ops::Nop;
+
+   let mut ring = AsyncIoUring::new(32)?;
+   let result = ring.submit_op(Nop).await?;
+   println!("Result: {}", result);
+
+Enable with ``async-tokio`` feature:
+
+.. code:: toml
+
+   liburing-rs = { version = "0.1", features = ["async-tokio"] }
+
+**Async API (async-std):**
+
+Enable with ``async-async-std`` feature:
+
+.. code:: toml
+
+   liburing-rs = { version = "0.1", features = ["async-async-std"] }
+
 Examples
 --------
+
+**Synchronous examples:**
 
 .. code:: bash
 
@@ -95,6 +124,22 @@ Examples
 
    # Polling benchmark
    cargo run --release --example poll-bench
+
+**Async examples:**
+
+.. code:: bash
+
+   # Async NOP with tokio
+   cargo run --example async_nop_tokio --features async-tokio
+
+   # Async NOP with async-std
+   cargo run --example async_nop_async_std --features async-async-std
+
+   # Async polling benchmark (tokio)
+   cargo run --release --example async_poll_bench --features async-tokio
+
+   # Async polling benchmark (async-std)
+   cargo run --release --example async_poll_bench_async_std --features async-async-std
 
 Tests
 -----
@@ -113,11 +158,12 @@ Coverage includes:
 Architecture
 ------------
 
-Three layers:
+Four layers:
 
 1. **sys**: Raw FFI bindings (unsafe)
 2. **Safe wrappers**: RAII types (IoUring, SubmissionQueue, CompletionQueue)
 3. **Operations**: Type-safe operation builders (Read, Write, etc.)
+4. **Async runtime integration**: AsyncIoUring for tokio and async-std (optional)
 
 Performance
 -----------

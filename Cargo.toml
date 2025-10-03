@@ -18,6 +18,9 @@ links = "uring"
 [dependencies]
 libc = "0.2"
 bitflags = "2.6"
+tokio = { version = "1.0", features = ["net", "io-util", "rt"], optional = true }
+async-std = { version = "1.0", optional = true }
+futures = { version = "0.3", optional = true }
 
 [build-dependencies]
 bindgen = "0.72"
@@ -25,9 +28,26 @@ pkg-config = "0.3"
 
 [dev-dependencies]
 tempfile = "3.0"
+tokio = { version = "1.0", features = ["full"] }
+async-std = { version = "1.0", features = ["attributes"] }
 
 [features]
 default = []
-# Future: async support via tokio/async-std
-async-tokio = []
-async-std = []
+async-tokio = ["tokio", "futures"]
+async-async-std = ["async-std", "futures"]
+
+[[example]]
+name = "async_nop_tokio"
+required-features = ["async-tokio"]
+
+[[example]]
+name = "async_nop_async_std"
+required-features = ["async-async-std"]
+
+[[example]]
+name = "async_poll_bench"
+required-features = ["async-tokio"]
+
+[[example]]
+name = "async_poll_bench_async_std"
+required-features = ["async-async-std"]
